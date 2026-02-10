@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    .stats { display: flex; gap: 12px; }
+    .card { padding: 12px; border: 1px solid #ddd; border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>Админка анонимного чата</h1>
+  <div class="stats">
+    <div class="card">Пользователи: {{ stats.total_users }}</div>
+    <div class="card">Активные комнаты: {{ stats.active_rooms }}</div>
+    <div class="card">Сообщения: {{ stats.total_messages }}</div>
+    <div class="card">Жалобы: {{ stats.open_reports }}</div>
+  </div>
+
+  <h2>Комнаты</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Создана</th>
+        <th>Закрыта</th>
+        <th>Участники</th>
+        <th>Действие</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for room in rooms %}
+      <tr>
+        <td>{{ room.id }}</td>
+        <td>{{ room.created_at }}</td>
+        <td>{{ room.closed_at or '-' }}</td>
+        <td>
+          {% for member in room.members %}
+            <code>{{ member.user_hash[:10] }}...</code><br />
+          {% endfor %}
+        </td>
+        <td><a href="/rooms/{{ room.id }}">Открыть</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
