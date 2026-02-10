@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Room {{ room.id }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    .msg { border-bottom: 1px solid #eee; padding: 8px 0; }
+    code { background: #f6f6f6; padding: 2px 4px; }
+    form { display: inline-block; margin-right: 8px; }
+  </style>
+</head>
+<body>
+  <a href="/">← Назад</a>
+  <h1>Комната #{{ room.id }}</h1>
+  <p>Создана: {{ room.created_at }} | Закрыта: {{ room.closed_at or '-' }}</p>
+
+  <h3>Участники</h3>
+  {% for member in members %}
+    <div>
+      <code>{{ member }}</code>
+      <form action="/ban" method="post">
+        <input type="hidden" name="user_hash" value="{{ member }}" />
+        <button type="submit">Бан</button>
+      </form>
+      <form action="/unban" method="post">
+        <input type="hidden" name="user_hash" value="{{ member }}" />
+        <button type="submit">Разбан</button>
+      </form>
+    </div>
+  {% endfor %}
+
+  <h3>Переписка</h3>
+  {% for msg in messages %}
+    <div class="msg">
+      <small>{{ msg.created_at }}</small><br />
+      <code>{{ msg.sender_hash[:10] }}...</code>: {{ msg.text }}
+    </div>
+  {% endfor %}
+</body>
+</html>
